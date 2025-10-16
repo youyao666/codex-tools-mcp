@@ -1,0 +1,25 @@
+{
+  "name": "ide-tools-mcp",
+  "version": "1.0.0",
+  "description": "MCP服务器，将IDE工具暴露给其他AI使用",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mcp",
+    "ide",
+    "tools"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "iconv-lite": "^0.7.0",
+    "jschardet": "^3.1.4"
+  },
+  "bin": {
+    "ide-tools-mcp": "./index.js"
+  }
+}
