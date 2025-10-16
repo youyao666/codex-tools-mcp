@@ -1,0 +1,39 @@
+{
+  "name": "ide-tools-mcp",
+  "version": "1.0.0",
+  "description": "通用MCP服务器配置示例",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mcp",
+    "ide",
+    "tools",
+    "universal"
+  ],
+  "author": "",
+  "license": "MIT",
+  "mcpServers": {
+    "ide-tools": {
+      "command": "npx",
+      "args": ["-y", "@youyao666/ide-tools-mcp"],
+      "description": "IDE工具MCP服务器，提供文件操作、命令执行和Git集成功能"
+    }
+  },
+  "supportedClients": [
+    "Claude Desktop",
+    "Continue.dev",
+    "Cline",
+    "自定义MCP客户端"
+  ],
+  "features": [
+    "文件读写操作",
+    "目录浏览",
+    "命令执行",
+    "Git版本控制",
+    "多编码支持",
+    "跨平台兼容"
+  ]
+}
