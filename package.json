@@ -1,7 +1,7 @@
 {
   "name": "codex-tools-mcp",
-  "version": "1.0.0",
-  "description": "MCP服务器，将Codex工具暴露给其他AI使用",
+  "version": "2.0.0",
+  "description": "高级MCP服务器，提供智能文件操作、代码搜索、计划管理和流式命令执行等功能",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -10,7 +10,11 @@
   "keywords": [
     "mcp",
     "codex",
-    "tools"
+    "tools",
+    "file-operations",
+    "code-search",
+    "plan-management",
+    "streaming-execution"
   ],
   "author": "",
   "license": "ISC",

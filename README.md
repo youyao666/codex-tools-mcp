@@ -1,6 +1,21 @@
-# Codex Tools MCP Server
+# Codex Tools MCP Server - 高级版
 
-一个通用的MCP服务器，为AI客户端提供IDE工具功能，包括文件操作、命令执行和Git集成。
+一个高级MCP服务器，为AI客户端提供强大的IDE工具功能，包括智能文件操作、代码搜索、计划管理和流式命令执行等高级功能。
+
+## 新版本亮点
+
+### 🚀 高级功能
+- **智能文件读取**：支持缩进感知和上下文分析的高级文件读取
+- **代码搜索**：基于ripgrep的高性能代码搜索工具
+- **计划管理**：完整的任务和计划管理系统
+- **流式命令执行**：支持长时间运行的命令和实时输出监控
+- **高级补丁应用**：支持多种补丁类型的文件系统操作
+
+### 🔧 增强的文件操作
+- 自动编码检测和转换
+- 缩进感知的代码块读取
+- 基于锚点的上下文分析
+- 多种补丁应用模式（添加、删除、更新、移动）
 
 ## 快速开始
 
@@ -13,7 +28,7 @@
   "mcpServers": {
     "codex-tools": {
       "command": "npx",
-      "args": ["-y", "@youyao666/codex-tools-mcp"]
+      "args": ["-y", "@youyao666/codex-tools-mcp@latest"]
     }
   }
 }
@@ -63,7 +78,7 @@
   "mcpServers": {
     "codex-tools": {
       "command": "npx",
-      "args": ["-y", "@youyao666/codex-tools-mcp"]
+      "args": ["-y", "@youyao666/codex-tools-mcp@latest"]
     }
   }
 }
@@ -78,39 +93,55 @@
   "cline.mcpServers": {
     "codex-tools": {
       "command": "npx",
-      "args": ["-y", "@youyao666/codex-tools-mcp"]
+      "args": ["-y", "@youyao666/codex-tools-mcp@latest"]
     }
   }
 }
 ```
 
-### 自定义MCP客户端
+## 高级工具列表
 
-如果您使用的是自定义MCP客户端，请参考以下标准配置格式：
-
-```json
-{
-  "mcpServers": {
-    "codex-tools": {
-      "command": "npx",
-      "args": ["-y", "@youyao666/codex-tools-mcp"],
-      "env": {}
-    }
-  }
-}
-```
-
-## 可用工具列表
-
-配置完成后，您将获得以下工具：
-
-### 文件操作工具
-- `read_file` - 读取文件内容
-- `write_file` - 写入文件内容
+### 智能文件操作工具
+- `read_file_advanced` - 高级文件读取，支持缩进感知和上下文分析
+  - 支持slice和indentation两种读取模式
+  - 基于锚点行的智能上下文收集
+  - 自动编码检测和转换
+- `apply_patch` - 高级补丁应用工具
+  - 支持add、delete、update、move四种补丁类型
+  - 支持字符串替换和内容替换两种更新模式
+  - 自动目录创建和备份功能
+- `read_file` - 标准文件读取（增强版，支持自动编码检测）
+- `write_file` - 标准文件写入（增强版，支持编码设置和备份）
 - `list_directory` - 列出目录内容
 - `create_directory` - 创建目录
 - `delete_file` - 删除文件或目录
 - `move_file` - 移动或重命名文件
+
+### 代码搜索工具
+- `grep_files` - 基于ripgrep的高性能代码搜索
+  - 支持正则表达式和字面量搜索
+  - 文件类型过滤（include/exclude模式）
+  - 上下文行显示
+  - 大小写敏感/不敏感搜索
+  - 搜索深度限制
+  - 结果数量限制
+
+### 计划管理工具
+- `update_plan` - 完整的计划和任务管理系统
+  - 支持创建、更新、归档计划
+  - 任务添加、更新、删除
+  - 任务状态跟踪（pending、in_progress、completed、blocked）
+  - 任务优先级管理（low、medium、high、critical）
+  - 任务依赖关系
+  - 工时估算和跟踪
+
+### 流式命令执行工具
+- `exec_stream` - 流式命令执行工具
+  - 实时输出流
+  - 长时间运行的命令支持
+  - 超时控制
+  - 进程管理
+  - 环境变量自定义
 
 ### 命令执行工具
 - `execute_command` - 执行系统命令
@@ -124,6 +155,107 @@
 - `git_pull` - 从远程仓库拉取
 - `git_branch` - 管理Git分支
 
+## 高级功能使用示例
+
+### 智能文件读取
+
+```json
+{
+  "name": "read_file_advanced",
+  "arguments": {
+    "file_path": "src/components/Button.js",
+    "mode": "indentation",
+    "indentation": {
+      "anchor_line": 15,
+      "context_lines": 5,
+      "include_same_level": true,
+      "indent_size": 2
+    }
+  }
+}
+```
+
+### 代码搜索
+
+```json
+{
+  "name": "grep_files",
+  "arguments": {
+    "pattern": "function handleClick",
+    "path": "src",
+    "include_pattern": "*.js",
+    "context_lines": 3,
+    "case_sensitive": false
+  }
+}
+```
+
+### 计划管理
+
+```json
+{
+  "name": "update_plan",
+  "arguments": {
+    "action": "create",
+    "title": "实现用户认证功能",
+    "description": "添加登录、注册和密码重置功能",
+    "tasks": [
+      {
+        "id": "auth-1",
+        "title": "设计认证API",
+        "status": "pending",
+        "priority": "high",
+        "estimated_hours": 8
+      },
+      {
+        "id": "auth-2",
+        "title": "实现登录组件",
+        "status": "pending",
+        "priority": "high",
+        "estimated_hours": 6
+      }
+    ]
+  }
+}
+```
+
+### 流式命令执行
+
+```json
+{
+  "name": "exec_stream",
+  "arguments": {
+    "command": "npm run dev",
+    "cwd": "/path/to/project",
+    "stream_output": true,
+    "timeout": 600000
+  }
+}
+```
+
+### 高级补丁应用
+
+```json
+{
+  "name": "apply_patch",
+  "arguments": {
+    "patches": [
+      {
+        "type": "add",
+        "path": "src/utils/helpers.js",
+        "content": "export const formatDate = (date) => { ... }"
+      },
+      {
+        "type": "update",
+        "path": "src/components/Header.js",
+        "old_str": "const Header = () => {",
+        "new_str": "const Header = ({ user }) => {"
+      }
+    ]
+  }
+}
+```
+
 ## 环境变量配置（可选）
 
 您可以通过环境变量自定义服务器行为：
@@ -133,7 +265,7 @@
   "mcpServers": {
     "codex-tools": {
       "command": "npx",
-      "args": ["-y", "@youyao666/codex-tools-mcp"],
+      "args": ["-y", "@youyao666/codex-tools-mcp@latest"],
       "env": {
         "CODEX_TOOLS_LOG_LEVEL": "info",
         "CODEX_TOOLS_MAX_FILE_SIZE": "10485760",
@@ -221,6 +353,12 @@ $env:NODE_OPTIONS="--encoding=utf8"
    - Codex Tools MCP Server自动处理文件编码
    - 如果遇到编码问题，请确保文件是有效的文本文件
 
+4. **ripgrep未找到**
+   - grep_files工具需要安装ripgrep
+   - Windows: `winget install BurntSushi.ripgrep.MSVC`
+   - macOS: `brew install ripgrep`
+   - Linux: `sudo apt-get install ripgrep` 或 `sudo yum install ripgrep`
+
 ### 调试模式
 
 启用调试模式获取更多信息：
@@ -230,7 +368,7 @@ $env:NODE_OPTIONS="--encoding=utf8"
   "mcpServers": {
     "codex-tools": {
       "command": "npx",
-      "args": ["-y", "@youyao666/codex-tools-mcp", "--debug"],
+      "args": ["-y", "@youyao666/codex-tools-mcp@latest", "--debug"],
       "env": {
         "CODEX_TOOLS_LOG_LEVEL": "debug"
       }
@@ -252,6 +390,23 @@ $env:NODE_OPTIONS="--encoding=utf8"
 3. **文件访问**
    - 服务器会验证路径，防止目录遍历攻击
    - 大文件读取会被限制，可通过`CODEX_TOOLS_MAX_FILE_SIZE`调整
+
+## 版本历史
+
+### v2.0.0 (当前版本)
+- 添加智能文件读取工具 (read_file_advanced)
+- 添加代码搜索工具 (grep_files)
+- 添加计划管理工具 (update_plan)
+- 添加流式命令执行工具 (exec_stream)
+- 添加高级补丁应用工具 (apply_patch)
+- 增强标准文件操作工具，支持自动编码检测
+- 改进错误处理和日志记录
+
+### v1.0.0
+- 基础文件操作工具
+- 命令执行工具
+- Git操作工具
+- 基本编码支持
 
 ## 许可证
 
