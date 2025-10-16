@@ -1,5 +1,5 @@
 {
-  "name": "ide-tools-mcp",
+  "name": "codex-tools-mcp",
   "version": "1.0.0",
   "description": "通用MCP服务器配置示例",
   "main": "index.js",
@@ -9,17 +9,17 @@
   },
   "keywords": [
     "mcp",
-    "ide",
+    "codex",
     "tools",
     "universal"
   ],
   "author": "",
   "license": "MIT",
   "mcpServers": {
-    "ide-tools": {
+    "codex-tools": {
       "command": "npx",
-      "args": ["-y", "@youyao666/ide-tools-mcp"],
-      "description": "IDE工具MCP服务器，提供文件操作、命令执行和Git集成功能"
+      "args": ["-y", "@youyao666/codex-tools-mcp"],
+      "description": "Codex工具MCP服务器，提供文件操作、命令执行和Git集成功能"
     }
   },
   "supportedClients": [

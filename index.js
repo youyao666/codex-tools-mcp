@@ -73,11 +73,11 @@ function logOperation(operation, path, user, success, details = '') {
 
 const execAsync = promisify(exec);
 
-class IDEToolsServer {
+class CodexToolsServer {
   constructor() {
     this.server = new Server(
       {
-        name: 'ide-tools-server',
+        name: 'codex-tools-server',
         version: '1.0.0',
       },
       {
@@ -2684,9 +2684,9 @@ class IDEToolsServer {
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('IDE Tools MCP server running on stdio');
+    console.error('Codex Tools MCP server running on stdio');
   }
 }
 
-const server = new IDEToolsServer();
+const server = new CodexToolsServer();
 server.run().catch(console.error);

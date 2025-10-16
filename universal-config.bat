@@ -1,5 +1,5 @@
 @echo off
-echo IDE Tools MCP Server - 通用MCP配置工具
+echo Codex Tools MCP Server - 通用MCP配置工具
 echo.
 
 echo 选择配置方式:
@@ -15,9 +15,9 @@ if "%choice%"=="1" (
     echo.
     echo {
     echo   "mcpServers": {
-    echo     "ide-tools": {
+    echo     "codex-tools": {
     echo       "command": "npx",
-    echo       "args": ["-y", "@youyao666/ide-tools-mcp"]
+    echo       "args": ["-y", "@youyao666/codex-tools-mcp"]
     echo     }
     echo   }
     echo }
@@ -41,7 +41,7 @@ if "%choice%"=="1" (
     echo 正在检查本地安装...
     if not exist "index.js" (
         echo 错误: 未找到本地安装文件
-        echo 请先下载并安装IDE Tools MCP Server
+        echo 请先下载并安装Codex Tools MCP Server
         echo.
         echo 您可以运行 install.bat 进行安装
     ) else (
@@ -49,7 +49,7 @@ if "%choice%"=="1" (
         echo.
         echo {
         echo   "mcpServers": {
-        echo     "ide-tools": {
+        echo     "codex-tools": {
         echo       "command": "node",
         echo       "args": ["%cd%\index.js"]
         echo     }
@@ -70,9 +70,9 @@ if "%choice%"=="1" (
     
     echo { > mcp-config.json
     echo   "mcpServers": { >> mcp-config.json
-    echo     "ide-tools": { >> mcp-config.json
+    echo     "codex-tools": { >> mcp-config.json
     echo       "command": "npx", >> mcp-config.json
-    echo       "args": ["-y", "@youyao666/ide-tools-mcp"] >> mcp-config.json
+    echo       "args": ["-y", "@youyao666/codex-tools-mcp"] >> mcp-config.json
     echo     } >> mcp-config.json
     echo   } >> mcp-config.json
     echo } >> mcp-config.json

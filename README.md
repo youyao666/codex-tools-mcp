@@ -1,204 +1,261 @@
 # Codex Tools MCP Server
 
-## 项目简介
+一个通用的MCP服务器，为AI客户端提供IDE工具功能，包括文件操作、命令执行和Git集成。
 
-IDE Tools MCP Server 是一个基于Codex技术开发的MCP（Model Context Protocol）服务器，旨在为AI助手提供强大的IDE集成工具集。该项目将复杂的IDE功能抽象为简单易用的工具接口，使AI能够直接与开发环境进行交互，实现代码编写、文件管理、版本控制等核心开发任务的自动化。
+## 快速开始
 
-## 核心特性
+### 方式一：使用NPM包（推荐）
 
-- **基于Codex技术增强**：利用先进的代码理解能力，提供更智能的开发辅助
-- **一站式开发工具集**：集成文件操作、命令执行、Git管理等核心开发功能
-- **MCP协议兼容**：遵循Model Context Protocol标准，可与多种AI客户端无缝集成
-- **安全可控**：提供细粒度的权限控制，确保开发环境的安全性
-
-## 功能概述
-
-此服务器提供以下工具：
-
-1. **文件系统操作**
-   - `read_file`: 读取文件内容
-   - `write_file`: 写入文件内容
-   - `list_directory`: 列出目录内容
-
-2. **命令执行**
-   - `execute_command`: 执行系统命令
-
-3. **Git操作**
-   - `git_status`: 获取Git仓库状态
-   - `git_diff`: 获取Git仓库的差异
-
-## 应用场景
-
-- **AI辅助编程**：为AI助手提供直接访问IDE的能力，实现更精准的代码修改和生成
-- **自动化开发流程**：通过AI自动执行重复性开发任务，提高开发效率
-- **智能代码审查**：结合AI的代码理解能力，自动化代码质量检查
-- **项目文档生成**：自动分析代码结构，生成项目文档和API说明
-
-## 项目文件结构
-
-```
-ide-tools-mcp/
-├── .gitignore              # Git忽略文件配置
-├── CHINESE_ENCODING_SOLUTION.md  # 中文编码解决方案文档
-├── index.js                # 主程序入口文件，实现MCP服务器
-├── package.json            # 项目依赖和脚本配置
-├── package-lock.json       # 锁定依赖版本
-└── README.md               # 项目说明文档
-```
-
-### 核心文件说明
-
-- **index.js**: 项目的核心文件，实现了MCP协议服务器，提供文件操作、命令执行和Git管理等工具
-  - 包含IDEToolsServer类，负责处理所有MCP协议交互
-  - 实现了路径验证、操作日志记录等安全功能
-  - 支持多种文件编码格式，包括UTF-8、GBK、GB2312等
-  - 提供了完整的Git操作工具集
-
-- **package.json**: 定义了项目依赖和运行脚本，包含项目元数据
-  - 主要依赖：@modelcontextprotocol/sdk、iconv-lite、jschardet
-  - 提供了启动命令：`npm start`
-
-- **CHINESE_ENCODING_SOLUTION.md**: 解决中文编码问题的详细方案文档
-  - 详细说明了Windows环境下中文编码问题的解决方案
-  - 提供了多种编码格式的处理方法
-
-- **.gitignore**: 指定Git版本控制应忽略的文件和目录
-
-### 依赖说明
-
-项目依赖以下核心库：
-
-- **@modelcontextprotocol/sdk**: MCP协议的官方SDK，用于实现MCP服务器
-- **iconv-lite**: 轻量级字符编码转换库，支持多种编码格式
-- **jschardet**: 字符编码检测库，用于自动检测文件编码
-
-## 代码实现特点
-
-### 安全性设计
-- **路径验证**: 实现了严格的路径验证机制，防止目录遍历攻击
-- **操作日志**: 记录所有文件操作，便于审计和追踪
-- **权限控制**: 提供细粒度的权限管理，确保系统安全
-
-### 编码处理
-- **自动检测**: 使用jschardet库自动检测文件编码格式
-- **多编码支持**: 支持UTF-8、GBK、GB2312、Big5、Shift_JIS等多种编码
-- **编码转换**: 使用iconv-lite库进行可靠的编码转换
-
-### 工具集完整性
-- **文件操作**: 提供读取、写入、目录列表等基本文件操作
-- **命令执行**: 支持执行系统命令，并获取输出结果
-- **Git集成**: 提供完整的Git操作工具集，包括状态、差异、提交、推送、拉取和分支管理
-
-### 跨平台兼容
-- **Windows优化**: 特别针对Windows环境进行了编码优化
-- **路径处理**: 正确处理不同操作系统的路径分隔符
-- **命令适配**: 适配不同操作系统的命令行工具
-
-## 技术架构
-
-本项目采用模块化设计，主要包含以下组件：
-
-- **MCP协议层**：负责与AI客户端的通信和协议解析
-- **工具抽象层**：将IDE功能抽象为标准化的工具接口
-- **执行引擎**：负责具体工具的执行和结果返回
-- **安全控制**：提供权限管理和安全检查机制
-
-## 安装
-
-```bash
-npm install
-```
-
-## 使用方法
-
-### 作为MCP服务器运行
-
-```bash
-npm start
-```
-
-### 在Claude Desktop中配置
-
-在Claude Desktop的配置文件中添加以下内容：
+无需下载任何文件，只需在您的AI客户端配置中添加以下内容：
 
 ```json
 {
   "mcpServers": {
-    "ide-tools": {
-      "command": "node",
-      "args": ["F:\\github ai\\ide-tools-mcp\\index.js"],
+    "codex-tools": {
+      "command": "npx",
+      "args": ["-y", "@youyao666/codex-tools-mcp"]
+    }
+  }
+}
+```
+
+### 方式二：本地安装
+
+1. 下载并解压此发行版
+2. 运行安装脚本：
+   - Windows: 双击 `install.bat`
+   - Linux/macOS: `chmod +x install.sh && ./install.sh`
+
+3. 在您的AI客户端配置中添加：
+   ```json
+   {
+     "mcpServers": {
+       "codex-tools": {
+         "command": "node",
+         "args": ["[安装路径]/index.js"]
+       }
+     }
+   }
+   ```
+
+## 通用配置工具
+
+我们提供了通用的配置工具，帮助您快速生成适用于各种AI客户端的配置：
+
+- Windows: 运行 `universal-config.bat`
+- Linux/macOS: 运行 `chmod +x universal-config.sh && ./universal-config.sh`
+
+## 各种AI客户端配置方法
+
+### Claude Desktop
+
+配置文件位置：
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Linux: `~/.config/claude/claude_desktop_config.json`
+
+### Continue.dev
+
+在VSCode设置中添加：
+
+```json
+{
+  "mcpServers": {
+    "codex-tools": {
+      "command": "npx",
+      "args": ["-y", "@youyao666/codex-tools-mcp"]
+    }
+  }
+}
+```
+
+### Cline (VSCode扩展)
+
+在设置中添加：
+
+```json
+{
+  "cline.mcpServers": {
+    "codex-tools": {
+      "command": "npx",
+      "args": ["-y", "@youyao666/codex-tools-mcp"]
+    }
+  }
+}
+```
+
+### 自定义MCP客户端
+
+如果您使用的是自定义MCP客户端，请参考以下标准配置格式：
+
+```json
+{
+  "mcpServers": {
+    "codex-tools": {
+      "command": "npx",
+      "args": ["-y", "@youyao666/codex-tools-mcp"],
       "env": {}
     }
   }
 }
 ```
 
-### 在其他AI客户端中使用
+## 可用工具列表
 
-1. 确保MCP服务器正在运行
-2. 配置客户端连接到此服务器
-3. 使用提供的工具进行文件操作、命令执行和Git操作
+配置完成后，您将获得以下工具：
 
-## 工具详细说明
+### 文件操作工具
+- `read_file` - 读取文件内容
+- `write_file` - 写入文件内容
+- `list_directory` - 列出目录内容
+- `create_directory` - 创建目录
+- `delete_file` - 删除文件或目录
+- `move_file` - 移动或重命名文件
 
-### read_file
-读取指定路径的文件内容。
+### 命令执行工具
+- `execute_command` - 执行系统命令
+- `execute_interactive_command` - 执行交互式命令
 
-参数：
-- `path` (必需): 要读取的文件路径
+### Git操作工具
+- `git_status` - 查看Git状态
+- `git_diff` - 查看Git差异
+- `git_commit` - 提交Git更改
+- `git_push` - 推送到远程仓库
+- `git_pull` - 从远程仓库拉取
+- `git_branch` - 管理Git分支
 
-### write_file
-向指定路径写入文件内容。
+## 环境变量配置（可选）
 
-参数：
-- `path` (必需): 要写入的文件路径
-- `content` (必需): 要写入的内容
+您可以通过环境变量自定义服务器行为：
 
-### list_directory
-列出指定目录的内容。
+```json
+{
+  "mcpServers": {
+    "codex-tools": {
+      "command": "npx",
+      "args": ["-y", "@youyao666/codex-tools-mcp"],
+      "env": {
+        "CODEX_TOOLS_LOG_LEVEL": "info",
+        "CODEX_TOOLS_MAX_FILE_SIZE": "10485760",
+        "CODEX_TOOLS_ALLOWED_PATHS": "/path/to/allowed/directory"
+      }
+    }
+  }
+}
+```
 
-参数：
-- `path` (必需): 要列出的目录路径
+## 中文编码问题解决方案
 
-### execute_command
-执行系统命令。
+### 问题描述
+在Windows PowerShell环境中，Codex Tools MCP服务器处理中文字符时出现编码问题，导致中文字符被转换为问号(?)。
 
-参数：
-- `command` (必需): 要执行的命令
-- `cwd` (可选): 命令执行的工作目录
+### 问题原因
+1. PowerShell默认使用系统编码（通常是GBK/CP936），而不是UTF-8
+2. 通过PowerShell的echo命令传递JSON-RPC请求时，中文字符被错误编码
+3. Node.js接收到的已经是被错误编码的字符，无法正确还原
 
-### git_status
-获取Git仓库的状态。
+### 解决方案
 
-参数：
-- `path` (可选): Git仓库路径，默认为当前目录
+#### 方案1：在PowerShell中设置UTF-8编码（推荐）
+在运行Codex Tools MCP服务器之前，先设置PowerShell的编码：
+```powershell
+$OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
+echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "write_file", "arguments": {"path": "test.txt", "content": "这是中文内容"}}}' | node index.js
+```
 
-### git_diff
-获取Git仓库的差异。
+#### 方案2：使用Node.js脚本直接调用（最可靠）
+创建一个Node.js脚本来直接调用Codex Tools MCP服务器，避免通过PowerShell传递中文字符：
+```javascript
+const { spawn } = require('child_process');
 
-参数：
-- `path` (可选): Git仓库路径，默认为当前目录
-- `file` (可选): 特定文件的差异
+const mcpServer = spawn('node', ['index.js'], {
+  cwd: __dirname,
+  stdio: ['pipe', 'pipe', 'pipe'],
+  encoding: 'utf8'
+});
 
-## 注意事项
+const request = {
+  jsonrpc: "2.0",
+  id: 1,
+  method: "tools/call",
+  params: {
+    name: "write_file",
+    arguments: {
+      path: "test.txt",
+      content: "这是中文内容"
+    }
+  }
+};
 
-1. 此服务器提供了对文件系统和命令执行的工具，请确保在安全的环境中运行
-2. 执行命令时，请谨慎使用，避免执行危险的命令
-3. 在生产环境中使用时，考虑添加额外的安全措施
+mcpServer.stdin.write(JSON.stringify(request) + '\n');
+```
 
-## 贡献指南
+#### 方案3：使用环境变量
+设置NODE_OPTIONS环境变量：
+```powershell
+$env:NODE_OPTIONS="--encoding=utf8"
+```
 
-我们欢迎社区贡献！如果您想为此项目做出贡献，请遵循以下步骤：
+### 使用建议
+1. 对于需要处理中文的场景，建议使用方案1或方案2
+2. 可以创建一个PowerShell配置文件，自动设置UTF-8编码
+3. 考虑使用WSL或Git Bash等默认支持UTF-8的终端环境
 
-1. Fork 本仓库
-2. 创建您的功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交您的更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启一个 Pull Request
+### 注意事项
+1. 即使文件内容正确保存，PowerShell的输出可能仍显示为问号，这是PowerShell的显示问题，不影响文件内容
+2. 可以通过检查文件的十六进制内容或使用其他编辑器验证文件是否正确保存
 
-## 关于AI辅助开发
+## 故障排除
 
-本项目在开发过程中使用了AI辅助编程工具
+### 常见问题
+
+1. **命令未找到**
+   - 确保已安装Node.js (v16或更高版本)
+   - 检查网络连接，npx需要从NPM下载包
+
+2. **权限错误**
+   - 确保AI客户端有权限访问目标目录
+   - 在Linux/macOS上可能需要使用chmod设置脚本权限
+
+3. **编码问题**
+   - Codex Tools MCP Server自动处理文件编码
+   - 如果遇到编码问题，请确保文件是有效的文本文件
+
+### 调试模式
+
+启用调试模式获取更多信息：
+
+```json
+{
+  "mcpServers": {
+    "codex-tools": {
+      "command": "npx",
+      "args": ["-y", "@youyao666/codex-tools-mcp", "--debug"],
+      "env": {
+        "CODEX_TOOLS_LOG_LEVEL": "debug"
+      }
+    }
+  }
+}
+```
+
+## 安全注意事项
+
+1. **路径限制**
+   - 默认情况下，服务器限制访问当前工作目录及其子目录
+   - 使用`CODEX_TOOLS_ALLOWED_PATHS`环境变量可以指定其他允许的路径
+
+2. **命令执行**
+   - 命令执行工具功能强大，请谨慎使用
+   - 某些AI客户端可能默认禁用命令执行工具
+
+3. **文件访问**
+   - 服务器会验证路径，防止目录遍历攻击
+   - 大文件读取会被限制，可通过`CODEX_TOOLS_MAX_FILE_SIZE`调整
+
+## 许可证
+
+MIT License
 
 
 
