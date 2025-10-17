@@ -22,6 +22,7 @@ const { exec } = require('child_process');
 const { promisify } = require('util');
 const jschardet = require('jschardet');
 const iconv = require('iconv-lite');
+const CodeStructureAnalyzer = require('./code_analyzer.js');
 
 // 路径验证函数，防止路径遍历攻击
 function validatePath(inputPath, allowedBasePaths = []) {
@@ -86,6 +87,9 @@ class CodexToolsServer {
         },
       }
     );
+
+    // 初始化代码分析器
+    this.codeAnalyzer = new CodeStructureAnalyzer();
 
     this.setupToolHandlers();
   }
@@ -1020,6 +1024,37 @@ class CodexToolsServer {
               required: ['pattern'],
             },
           },
+          {
+            name: 'analyze_code_structure',
+            description: '分析JavaScript/TypeScript代码结构，提取函数、类、变量等',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                file_path: {
+                  type: 'string',
+                  description: '要分析的文件路径（必须是绝对路径）',
+                },
+                encoding: {
+                  type: 'string',
+                  description: '文件编码，默认为"auto"自动检测',
+                  default: 'auto',
+                },
+                analysis_type: {
+                  type: 'string',
+                  description: '分析类型：all（全部）、functions（函数）、classes（类）、variables（变量）、dependencies（依赖关系）',
+                  enum: ['all', 'functions', 'classes', 'variables', 'dependencies'],
+                  default: 'all',
+                },
+                format: {
+                  type: 'string',
+                  description: '输出格式：json（JSON格式）或 text（文本格式）',
+                  enum: ['json', 'text'],
+                  default: 'json',
+                },
+              },
+              required: ['file_path'],
+            },
+          },
         ],
       };
     });
@@ -1090,6 +1125,8 @@ class CodexToolsServer {
             return await this.handlePreviewFile(args);
           case 'search_advanced':
             return await this.handleSearchAdvanced(args);
+          case 'analyze_code_structure':
+            return await this.handleAnalyzeCodeStructure(args);
           default:
             throw new Error(`未知工具: ${name}`);
         }
@@ -4093,6 +4130,189 @@ class CodexToolsServer {
     } catch (error) {
       throw new Error(`获取操作日志失败: ${error.message}`);
     }
+  }
+
+  async handleAnalyzeCodeStructure(args) {
+    const {
+      file_path,
+      encoding = 'auto',
+      analysis_type = 'all',
+      format = 'json',
+      user = 'unknown'
+    } = args;
+    
+    try {
+      // 验证路径必须是绝对路径
+      if (!path.isAbsolute(file_path)) {
+        throw new Error('file_path必须是绝对路径');
+      }
+      
+      // 验证路径安全性
+      const absolutePath = validatePath(file_path);
+      
+      // 检查文件是否存在
+      try {
+        await fs.access(absolutePath);
+      } catch (error) {
+        throw new Error(`文件不存在: ${absolutePath}`);
+      }
+      
+      // 检查文件是否为JavaScript/TypeScript文件
+      const ext = path.extname(absolutePath).toLowerCase();
+      const validExtensions = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs'];
+      if (!validExtensions.includes(ext)) {
+        throw new Error(`不支持的文件类型: ${ext}。支持的文件类型: ${validExtensions.join(', ')}`);
+      }
+      
+      // 使用代码分析器分析文件
+      const analysisResult = this.codeAnalyzer.analyzeCodeStructure(absolutePath, encoding);
+      
+      // 根据分析类型过滤结果
+      let filteredResult = {};
+      if (analysis_type === 'all') {
+        filteredResult = analysisResult;
+      } else {
+        filteredResult.file = analysisResult.file;
+        if (analysis_type === 'functions') {
+          filteredResult.functions = analysisResult.functions;
+        } else if (analysis_type === 'classes') {
+          filteredResult.classes = analysisResult.classes;
+        } else if (analysis_type === 'variables') {
+          filteredResult.variables = analysisResult.variables;
+        } else if (analysis_type === 'dependencies') {
+          filteredResult.dependencies = analysisResult.dependencies;
+        }
+      }
+      
+      // 格式化输出
+      let output;
+      if (format === 'json') {
+        output = JSON.stringify(filteredResult, null, 2);
+      } else {
+        // 文本格式
+        output = this.formatAnalysisResultAsText(filteredResult, analysis_type);
+      }
+      
+      // 记录操作日志
+      logOperation('analyze_code_structure', absolutePath, user, true, `分析类型: ${analysis_type}, 格式: ${format}`);
+      
+      return {
+        content: [
+          {
+            type: 'text',
+            text: output,
+          },
+        ],
+      };
+    } catch (error) {
+      // 记录操作日志
+      logOperation('analyze_code_structure', file_path, user, false, error.message);
+      throw new Error(`代码结构分析失败: ${error.message}`);
+    }
+  }
+
+  formatAnalysisResultAsText(result, analysisType) {
+    let output = `代码结构分析结果\n`;
+    output += `文件: ${result.file}\n`;
+    output += `分析类型: ${analysisType}\n\n`;
+    
+    if (result.functions && result.functions.length > 0) {
+      output += `函数 (${result.functions.length}个):\n`;
+      result.functions.forEach((func, index) => {
+        output += `${index + 1}. ${func.type}: ${func.name}\n`;
+        if (func.start && func.end) {
+          output += `   位置: 行 ${func.start.line}-${func.end.line}\n`;
+        }
+        if (func.params && func.params.length > 0) {
+          output += `   参数: ${func.params.join(', ')}\n`;
+        }
+        if (func.async) {
+          output += `   异步: 是\n`;
+        }
+        if (func.generator) {
+          output += `   生成器: 是\n`;
+        }
+        output += '\n';
+      });
+    }
+    
+    if (result.classes && result.classes.length > 0) {
+      output += `类 (${result.classes.length}个):\n`;
+      result.classes.forEach((cls, index) => {
+        output += `${index + 1}. ${cls.type}: ${cls.name}\n`;
+        if (cls.start && cls.end) {
+          output += `   位置: 行 ${cls.start.line}-${cls.end.line}\n`;
+        }
+        if (cls.superClass) {
+          output += `   继承自: ${cls.superClass}\n`;
+        }
+        if (cls.methods && cls.methods.length > 0) {
+          output += `   方法: ${cls.methods.map(m => m.name).join(', ')}\n`;
+        }
+        if (cls.properties && cls.properties.length > 0) {
+          output += `   属性: ${cls.properties.map(p => p.name).join(', ')}\n`;
+        }
+        output += '\n';
+      });
+    }
+    
+    if (result.variables && result.variables.length > 0) {
+      output += `变量 (${result.variables.length}个):\n`;
+      result.variables.forEach((variable, index) => {
+        output += `${index + 1}. ${variable.kind}: ${variable.name}\n`;
+        if (variable.start && variable.end) {
+          output += `   位置: 行 ${variable.start.line}-${variable.end.line}\n`;
+        }
+        if (variable.value !== null) {
+          output += `   值: ${variable.value}\n`;
+        }
+        output += '\n';
+      });
+    }
+    
+    if (result.dependencies) {
+      const { imports, requires, calls, properties } = result.dependencies;
+      
+      if (imports && imports.length > 0) {
+        output += `导入 (${imports.length}个):\n`;
+        imports.forEach((imp, index) => {
+          output += `${index + 1}. 从 ${imp.source} 导入: `;
+          output += imp.specifiers.map(s => {
+            if (s.type === 'default') return s.local;
+            if (s.type === 'named') return `${s.imported} as ${s.local}`;
+            if (s.type === 'namespace') return `* as ${s.local}`;
+          }).join(', ');
+          output += '\n';
+        });
+        output += '\n';
+      }
+      
+      if (requires && requires.length > 0) {
+        output += `Require (${requires.length}个):\n`;
+        requires.forEach((req, index) => {
+          output += `${index + 1}. require('${req.module}')\n`;
+        });
+        output += '\n';
+      }
+      
+      if (calls && calls.length > 0) {
+        output += `函数调用 (${calls.length}个):\n`;
+        calls.forEach((call, index) => {
+          output += `${index + 1}. ${call.name}()\n`;
+        });
+        output += '\n';
+      }
+      
+      if (properties && properties.length > 0) {
+        output += `属性访问 (${properties.length}个):\n`;
+        properties.forEach((prop, index) => {
+          output += `${index + 1}. ${prop.object}.${prop.property}\n`;
+        });
+        output += '\n';
+      }
+    }
+    
+    return output;
   }
 
   async run() {
